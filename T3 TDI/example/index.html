@@ -19,36 +19,45 @@
       socket.on('POSITION', function (data) {
         console.log(data);
       });
-      socket.on('AIRPORTS', function (data) {
-        console.log(data);
-      });
-      socket.on('FLIGHTS', function (data) {
-        console.log(data);
-        for (var i = 0; i < array.length; i++) {
-          array[i]
-        }
-      });
 
       function initMap() {
         var uluru = {lat: -25.363, lng: 131.044};
-        var miau = {lat: -29.363, lng: 135.044};
+        var santiago = {lat: -33.382761, lng: -70.803203};
 
-        var map = new google.maps.Map(document.getElementById('map'), {
+        window.googleMap = new google.maps.Map(document.getElementById('map'), {
           zoom: 4,
-          center: uluru
+          center: santiago
         });
 
-        var marker = new google.maps.Marker({
-          position: uluru,
-          map: map
-        });
-
-        var marker2 = new google.maps.Marker({
-          position: miau,
-          map: map
-        });
-
+        // var marker = new google.maps.Marker({
+        //   position: santiago,
+        //   map: window.googleMap
+        // });
       }
+
+      socket.on('AIRPORTS', function (data) {
+        console.log(data);
+
+        for (arprt in data) {
+          // console.log(data[arprt]["airport_position"][0]);
+          // console.log(data[arprt]["airport_position"][1]);
+          var x = data[arprt]["airport_position"][0];
+          var y = data[arprt]["airport_position"][1];
+          var pos = {lat: x, lng: y};
+          var marker = new google.maps.Marker({
+            position: pos,
+            map: window.googleMap
+          });
+        }
+
+
+      });
+      socket.on('FLIGHTS', function (data) {
+        console.log(data);
+      });
+
+
+
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjXXhtLec-9uBI7A_9nHGrUF_8JezqY34&callback=initMap">
