@@ -54,6 +54,28 @@
       });
       socket.on('FLIGHTS', function (data) {
         console.log(data);
+        for (flight in data){
+          // console.log("data de los flights");
+          var originX = data[flight]["origin"]["airport_position"][0];
+          var originY = data[flight]["origin"]["airport_position"][1];
+          var destinationX = data[flight]["destination"]["airport_position"][0];
+          var destinationY = data[flight]["destination"]["airport_position"][1];
+
+          var flightPlanCoordinates = [
+          {lat: originX, lng: originY},
+          {lat: destinationX, lng: destinationY}
+          ];
+          var flightPath = new google.maps.Polyline({
+            path: flightPlanCoordinates,
+            geodesic: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+          });
+
+          flightPath.setMap(window.googleMap);
+          // console.log("data de los flights");
+        }
       });
 
 
