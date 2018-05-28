@@ -16,12 +16,47 @@
       var socket = io.connect('wss://integracion-tarea-3.herokuapp.com', {path: "/flights"});
       socket.emit('AIRPORTS', {});
       socket.emit('FLIGHTS', {});
+
+      var dictionary = {};
       socket.on('POSITION', function (data) {
-        console.log(data);
+
+
+
+        var posX = data["position"][0];
+        var posY = data["position"][1];
+        var code = data['code'];
+
+        if (dictionary[code] == undefined)
+        {
+          dictionary[code] = [{lat: posX, lng: posY}];
+          console.log(dictionary[code]);
+          console.log('hola');
+        }
+
+        else {
+          dictionary[code].push({lat: posX, lng: posY});
+          console.log(dictionary[code]);
+          console.log('chau');
+        }
+
+        for (code in dictionary){
+
+          var flightPath = new google.maps.Polyline({
+            path: dictionary[code],
+            geodesic: true,
+            strokeColor: '#d8d506',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+          });
+
+          flightPath.setMap(window.googleMap);
+
+        }
+
+
       });
 
       function initMap() {
-        var uluru = {lat: -25.363, lng: 131.044};
         var santiago = {lat: -33.382761, lng: -70.803203};
 
         window.googleMap = new google.maps.Map(document.getElementById('map'), {
