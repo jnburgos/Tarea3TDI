@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+       #map {
+        height: 400px;
+        width: 100%;
+       }
+    </style>
+  </head>
+  <body>
+    <!-- <h3>My Google Maps Demo</h3> -->
+    <div id="map"></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect('wss://integracion-tarea-3.herokuapp.com', {path: "/flights"});
+      socket.emit('AIRPORTS', {});
+      socket.emit('FLIGHTS', {});
+      socket.on('POSITION', function (data) {
+        console.log(data);
+      });
+      socket.on('AIRPORTS', function (data) {
+        console.log(data);
+      });
+      socket.on('FLIGHTS', function (data) {
+        console.log(data);
+        for (var i = 0; i < array.length; i++) {
+          array[i]
+        }
+      });
+
+      function initMap() {
+        var uluru = {lat: -25.363, lng: 131.044};
+        var miau = {lat: -29.363, lng: 135.044};
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: uluru
+        });
+
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+
+        var marker2 = new google.maps.Marker({
+          position: miau,
+          map: map
+        });
+
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjXXhtLec-9uBI7A_9nHGrUF_8JezqY34&callback=initMap">
+    </script>
+  </body>
+</html>
