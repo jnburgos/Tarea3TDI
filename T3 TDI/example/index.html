@@ -19,6 +19,7 @@
 
       var dictionary = {};
       var markRoute = {};
+      var infowindow = null;
 
       socket.on('POSITION', function (data) {
 
@@ -48,7 +49,7 @@
           var flightPath = new google.maps.Polyline({
             path: dictionary[code],
             geodesic: true,
-            strokeColor: '#d8d506',
+            strokeColor: '#06d81b',
             strokeOpacity: 1.0,
             strokeWeight: 2
           });
@@ -56,9 +57,6 @@
           flightPath.setMap(window.googleMap);
 
         }
-
-
-
 
       });
 
@@ -91,15 +89,9 @@
             html: contentString
           });
 
-          var infowindow = new google.maps.InfoWindow({
+          infowindow = new google.maps.InfoWindow({
             content: contentString
-
           });
-
-
-          // marker.addListener('click', function() {
-          //   infowindow.open(window.googleMap, marker);
-          // });
 
           google.maps.event.addListener(marker, "click", function () {
       			infowindow.setContent(this.html);
@@ -131,14 +123,31 @@
             strokeWeight: 2
           });
 
+          var contentFlight = '<div id="content">'+
+            '<p>' + data[flight]["code"] + '</p>'+
+            '<p>' + data[flight]["plane"] + '</p>'+
+            '<p>' + data[flight]["seats"] + " asientos" + '</p>'+
+            '<p>' + "Aerolínea " + data[flight]["airline"] + '</p>'
+            // '<h1>' + "Posición: " + posInfoX + "," + posInfoY +'</h1>'
+            '</div>';
 
           var image = 'https://img.fragrancex.com/images/ico-free-shipping.png';
           var flightCode = data[flight]["code"];
           markRoute[flightCode] = new google.maps.Marker({
             position: {lat: originX, lng: originY},
             map: window.googleMap,
-            icon: image
+            icon: image,
+            html: contentFlight
           });
+
+          infowindow = new google.maps.InfoWindow({
+            content: contentFlight
+          });
+
+          google.maps.event.addListener(markRoute[flightCode], "click", function () {
+      			infowindow.setContent(this.html);
+      			infowindow.open(window.googleMap, this);
+      		});
 
           flightPath.setMap(window.googleMap);
 
