@@ -21,12 +21,14 @@
       var markRoute = {};
       var infowindow = null;
 
+
       socket.on('POSITION', function (data) {
 
         var posX = data["position"][0];
         var posY = data["position"][1];
         var aCode = data["code"];
         var pos = {lat: posX, lng: posY};
+
 
         markRoute[aCode].setPosition(pos);
 
@@ -124,19 +126,20 @@
           });
 
           var contentFlight = '<div id="content">'+
-            '<p>' + data[flight]["code"] + '</p>'+
-            '<p>' + data[flight]["plane"] + '</p>'+
+            '<p>' + "Vuelo: " + data[flight]["code"] + '</p>'+
+            '<p>' + "Avión: " + data[flight]["plane"] + '</p>'+
             '<p>' + data[flight]["seats"] + " asientos" + '</p>'+
-            '<p>' + "Aerolínea " + data[flight]["airline"] + '</p>'
-            // '<h1>' + "Posición: " + posInfoX + "," + posInfoY +'</h1>'
+            '<p>' + "Aerolínea: " + data[flight]["airline"] + '</p>' +
+            '<p>' + "Origen: " + data[flight]["origin"]["name"] + '</p>' +
+            '<p>' + "Destino: " + data[flight]["destination"]["name"] + '</p>'
             '</div>';
 
-          var image = 'https://img.fragrancex.com/images/ico-free-shipping.png';
+          // var image = 'https://img.fragrancex.com/images/ico-free-shipping.png';
           var flightCode = data[flight]["code"];
           markRoute[flightCode] = new google.maps.Marker({
             position: {lat: originX, lng: originY},
             map: window.googleMap,
-            icon: image,
+            icon: "airplane.png",
             html: contentFlight
           });
 
