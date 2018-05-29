@@ -18,25 +18,29 @@
       socket.emit('FLIGHTS', {});
 
       var dictionary = {};
+      var markRoute = {};
+
       socket.on('POSITION', function (data) {
-
-
 
         var posX = data["position"][0];
         var posY = data["position"][1];
+        var aCode = data["code"];
+        var pos = {lat: posX, lng: posY};
+
+        markRoute[aCode].setPosition(pos);
+
+
         var code = data['code'];
 
         if (dictionary[code] == undefined)
         {
           dictionary[code] = [{lat: posX, lng: posY}];
           console.log(dictionary[code]);
-          console.log('hola');
         }
 
         else {
           dictionary[code].push({lat: posX, lng: posY});
           console.log(dictionary[code]);
-          console.log('chau');
         }
 
         for (code in dictionary){
@@ -54,6 +58,8 @@
         }
 
 
+
+
       });
 
       function initMap() {
@@ -64,10 +70,6 @@
           center: santiago
         });
 
-        // var marker = new google.maps.Marker({
-        //   position: santiago,
-        //   map: window.googleMap
-        // });
       }
 
       socket.on('AIRPORTS', function (data) {
@@ -79,10 +81,23 @@
           var x = data[arprt]["airport_position"][0];
           var y = data[arprt]["airport_position"][1];
           var pos = {lat: x, lng: y};
+
+          var contentString = data[arprt]['name'];
+          console.log(contentString);
+
+          var infowindow = new google.maps.InfoWindow({
+            content: contentString
+          });
+
           var marker = new google.maps.Marker({
             position: pos,
             map: window.googleMap
           });
+
+          marker.addListener('click', function() {
+            infowindow.open(window.googleMap, marker);
+          });
+
         }
 
 
@@ -108,8 +123,21 @@
             strokeWeight: 2
           });
 
+
+          var flightCode = data[flight]["code"];
+          markRoute[flightCode] = new google.maps.Marker({
+            position: {lat: originX, lng: originY},
+            map: window.googleMap,
+            // icon: 'airplane.png'
+          });
+
+          var markerAirplane = new google.maps.Marker({
+            position: {lat: originX, lng: originY},
+            map: window.googleMap
+          });
+
           flightPath.setMap(window.googleMap);
-          // console.log("data de los flights");
+
         }
       });
 
