@@ -74,7 +74,7 @@
 
       socket.on('AIRPORTS', function (data) {
         console.log(data);
-
+        var contentString = "";
         for (arprt in data) {
           // console.log(data[arprt]["airport_position"][0]);
           // console.log(data[arprt]["airport_position"][1]);
@@ -82,17 +82,19 @@
           var y = data[arprt]["airport_position"][1];
           var pos = {lat: x, lng: y};
 
-          var contentString = data[arprt]['name'];
+          contentString = data[arprt]['name'];
           console.log(contentString);
-
-          var infowindow = new google.maps.InfoWindow({
-            content: contentString
-          });
 
           var marker = new google.maps.Marker({
             position: pos,
             map: window.googleMap
           });
+
+          var infowindow = new google.maps.InfoWindow({
+            content: contentString
+
+          });
+
 
           marker.addListener('click', function() {
             infowindow.open(window.googleMap, marker);
@@ -130,11 +132,6 @@
             position: {lat: originX, lng: originY},
             map: window.googleMap,
             icon: image
-          });
-
-          var markerAirplane = new google.maps.Marker({
-            position: {lat: originX, lng: originY},
-            map: window.googleMap
           });
 
           flightPath.setMap(window.googleMap);
