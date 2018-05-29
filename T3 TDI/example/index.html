@@ -87,7 +87,8 @@
 
           var marker = new google.maps.Marker({
             position: pos,
-            map: window.googleMap
+            map: window.googleMap,
+            html: contentString
           });
 
           var infowindow = new google.maps.InfoWindow({
@@ -96,9 +97,14 @@
           });
 
 
-          marker.addListener('click', function() {
-            infowindow.open(window.googleMap, marker);
-          });
+          // marker.addListener('click', function() {
+          //   infowindow.open(window.googleMap, marker);
+          // });
+
+          google.maps.event.addListener(marker, "click", function () {
+      			infowindow.setContent(this.html);
+      			infowindow.open(window.googleMap, this);
+      		});
 
         }
 
